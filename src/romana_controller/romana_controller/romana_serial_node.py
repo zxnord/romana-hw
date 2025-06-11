@@ -15,7 +15,7 @@ class MyNode(Node):
         self.get_logger().info("Romana Serial node ha sido creado con exito.")
 
     def leer_valores_romana(self):
-        val = self._port.readline()
+        val = self._port.readline(20)
         # parse readline
         if not val:
             return
