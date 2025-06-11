@@ -9,9 +9,8 @@ class MyNode(Node):
 
     def __init__(self):
         super().__init__("romana_software")
-        self._subscription = self.create_subscription(String, "/peso_romana", self.leer_valores_romana)
+        self._subscription = self.create_subscription(String, "/peso_romana", self.leer_valores_romana, 5)
         self._port = serial.Serial("/dev/ttyGS0", baudrate=9600, timeout=3.0)
-        self._timer = self.create_timer(2.0, self.leer_valores_romana)
         self.get_logger().info("Romana Serial node ha sido creado con exito.")
 
     def leer_valores_romana(self, valor: String):
