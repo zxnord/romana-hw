@@ -10,17 +10,17 @@ class MyNode(Node):
     def __init__(self):
         super().__init__("romana_serial")
         self._publisher = self.create_publisher(String, "/peso_romana", 10)
-        self._port = serial.Serial("/dev/serial0", baudrate=9600, timeout=3.0)
-        self._timer = self.create_timer(2.0, self.leer_valores_romana)
+        self._port = serial.Serial("/dev/serial0", baudrate=9600, timeout=0.0001)
+        self._timer = self.create_timer(0.00005, self.leer_valores_romana)
         self.get_logger().info("Romana Serial node ha sido creado con exito.")
 
     def leer_valores_romana(self):
-        val = self._port.readline(20)
-        # parse readline
-        if not val:
-            return
-        
-        self.enviar_peso_romana(val)
+        val = bytearray()
+        while 1:
+            val += self._port.read(self._port.in_waiting or 1)
+            if val :
+                self.enviar_peso_romana(val)
+                break
 
 
     def enviar_peso_romana(self, data):
