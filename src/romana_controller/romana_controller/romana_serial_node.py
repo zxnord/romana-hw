@@ -10,7 +10,7 @@ class MyNode(Node):
     def __init__(self):
         super().__init__("romana_serial")
         self._publisher = self.create_publisher(String, "/peso_romana", 10)
-        self._port = serial.Serial("/dev/serial0", baudrate=9600, timeout=0.0001)
+        self._port = serial.Serial("/dev/ttySC1", baudrate=9600, timeout=0.0001)
         self._timer = self.create_timer(0.00005, self.leer_valores_romana)
         self.get_logger().info("Romana Serial node ha sido creado con exito.")
 
