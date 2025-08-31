@@ -88,3 +88,5 @@ Los logs se guardan en:
 
    - Revisar permisos de `/etc/rc.local`.
    - Verificar rutas absolutas.
+     
+- Si se necesita unir a una nueva red wifi, seguir los pasos del siguiente link https://askubuntu.com/questions/461825/how-to-connect-to-wifi-from-the-command-line  
