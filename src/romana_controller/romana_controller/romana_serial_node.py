@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 import rclpy
 from rclpy.node import Node
-from std_msgs.msg import String
 
 import serial
 
@@ -9,31 +8,28 @@ class MyNode(Node):
 
     def __init__(self):
         super().__init__("romana_serial")
-        self._publisher = self.create_publisher(String, "/peso_romana", 10)
-        self._port = serial.Serial("/dev/ttySC1", baudrate=9600, timeout=0.0001)
-        self._timer = self.create_timer(0.00005, self.leer_valores_romana)
+        self._port = serial.Serial("/dev/ttyGS0", baudrate=9600, timeout=0.001)
         self.get_logger().info("Romana Serial node ha sido creado con exito.")
 
-    def leer_valores_romana(self):
-        val = bytearray()
-        while 1:
-            val += self._port.read(self._port.in_waiting or 1)
-            if val :
-                self.enviar_peso_romana(val)
-                break
 
-
-    def enviar_peso_romana(self, data):
-        val = String()
-        val.data = str(data, 'utf-8')
-        self._publisher.publish(val)
-        self.get_logger().info("Peso publicado.")
+    def enviar_peso_romana(self, data: bytearray):
+        self._port.write(data)
+        self.get_logger().info("Traza: <" + str(data, 'utf-8') + "> enviada a USB COM.")
 
 def main(args=None):
     rclpy.init(args=args)
 
     node = MyNode()
-    rclpy.spin(node)
+    port = serial.Serial("/dev/ttySC1", baudrate=9600, timeout=0.0001)
+    data = bytearray()
+    while(1):
+        node.get_logger().info("Antes de leer la romana")
+        data = port.read(port.in_waiting or 1)
+        node.get_logger().info("Despues de leer la romana")
+        if data :
+            node.get_logger().info("Antes de enviar a USB")
+            node.enviar_peso_romana(data)
+            data = bytearray()
     rclpy.shutdown()
 
 if __name__ == '__main__':
